@@ -456,5 +456,16 @@ void drawFallIndicator()
 
 void settleBlocks()
 {
-  
+  while( !allBlocksSettled() )
+  {
+    for( int i = 0; i < activeBlocks.size(); i++ )
+    {
+      Block temp = activeBlocks.get(i);
+      if( !blickGrid[temp.xPos][temp.yPos].isSettled )
+      {
+         temp.update();
+         break;
+      }
+    }
+  }
 }

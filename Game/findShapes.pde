@@ -236,6 +236,8 @@ void removeFinishedShapes()
           {
             score += points.i;
             pointMessages.add( new PointMessage( 0, temp.xPos, temp.yPos ) );
+            finishedRemovingBlocks = false;
+            settleBlocks();
           }
         }
       }
