@@ -132,6 +132,10 @@ boolean findI_block( Block block )
     int connections = 0;
     Block current = new Block(), next = new Block();
     current = block;
+   
+//---------VERTICAL 'I' BlOCK --------- 
+
+    //search for and remove vertical block
     boolean finished = false;
     while( !finished )
     {
@@ -207,6 +211,94 @@ boolean findI_block( Block block )
           }
         }
         current = next;
+      }
+    }
+    
+//---------HORIZONTAL 'I' BLOCK--------- 
+    
+    if( !found )//If no vertical block was found
+    {
+      //Search and remove horizontal block
+      current = new Block();
+      next = new Block();
+      current = block;
+      connections = 0;
+      finished = false;
+      while( !finished )
+      {
+        if( current.xPos < (cols-1) )
+        {
+          if( blickGrid[current.xPos+1][current.yPos].isOccupied )
+          {
+            //if there is a block to the right of current
+            for( int i = 0; i <= activeBlocks.size(); i++ )
+            {
+              //Get the block above current into next
+              Block temp = activeBlocks.get(i);
+              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
+              {
+                next = temp;
+                break;
+              }
+            }
+            if( current.type == next.type )
+            {
+              //If current and next are same block type, move onto next set
+              connections++;
+              current = next;
+            }
+            else
+            {
+              //If block to the right of current is different type
+              finished = true;
+            }
+          }
+          else
+          {
+            //If there is no block to the right of current
+            finished = true;
+          }
+        }
+        else
+        {
+          //If at the right edge of the gameboard
+          finished = true;
+        }
+      }
+      if( connections == 3 )
+      {
+        found = true;
+        //Delete the blocks
+        current = block;
+        for( int i = 0; i < 4; i++ )
+        {
+          if( i < 3 )
+          {
+            for( int j = 0; j < activeBlocks.size(); j++ )
+            {
+              Block temp = activeBlocks.get(j);
+              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
+              {
+                next = temp;
+                break;
+              }
+            }
+          }
+          for( int j = 0; j < activeBlocks.size(); j++ )
+          {
+            Block temp = activeBlocks.get(j);
+            if( temp.xPos == current.xPos && temp.yPos == current.yPos )
+            {
+              finishedRemovingBlocks = false;
+              blickGrid[temp.xPos][temp.yPos].isOccupied = false;
+              blickGrid[temp.xPos][temp.yPos].isSettled = false;
+              activeBlocks.remove(j);
+              bubbleSortBlocks(1);
+              break;
+            }
+          }
+          current = next;
+        }
       }
     }
   }
