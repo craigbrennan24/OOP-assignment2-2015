@@ -122,11 +122,13 @@ boolean blockTypeNearby( Block block )
   return blockNearby;
 }
 
-boolean findI_block( Block block )
+int findI_block( Block block )
 {
-  //Returns true if block shape was found and removed, false if not
-  //Only find vertical blocks at first
+  //Returns -1 if I block was found
+  //Returns 0 if I block was found and I block is vertical
+  //Returns 1 if I block was found and I block is horizontal
   boolean found = false;
+  int blockSearchResult = -1;
   if( blockTypeNearby( block ) )
   {
     int connections = 0;
@@ -181,6 +183,7 @@ boolean findI_block( Block block )
     if( connections == 3 )
     {
       found = true;
+      blockSearchResult = 0;
       //Delete the blocks
       current = block;
       for( int i = 0; i < 4; i++ )
@@ -269,6 +272,7 @@ boolean findI_block( Block block )
       {
         found = true;
         //Delete the blocks
+        blockSearchResult = 1;
         current = block;
         for( int i = 0; i < 4; i++ )
         {
@@ -302,7 +306,7 @@ boolean findI_block( Block block )
       }
     }
   }
-  return found;
+  return blockSearchResult;
 }
 
 void removeFinishedShapes()
@@ -324,10 +328,21 @@ void removeFinishedShapes()
             break;
           }
           temp = activeBlocks.get(i);
-          if( findI_block( temp ) )
+          int search = findI_block( temp );//Search for an I block (horizontal+vertical)
+          if( search != -1 )
           {
+            //If an I block was found
             score += points.i;
-            pointMessages.add( new PointMessage( 0, temp.xPos, temp.yPos ) );
+            if( search == 0 )
+            {
+              //If found a vertical I block
+              pointMessages.add( new PointMessage( 0, temp.xPos, (temp.yPos+1) ) );
+            }
+            else if( search == 1 )
+            {
+              //If found a horizontal I block
+              pointMessages.add( new PointMessage( 0, (temp.xPos+1), temp.yPos ) );
+            }
             finishedRemovingBlocks = false;
             settleBlocks();
           }
