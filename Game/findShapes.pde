@@ -236,7 +236,7 @@ int findI_block( Block block )
             //if there is a block to the right of current
             for( int i = 0; i <= activeBlocks.size(); i++ )
             {
-              //Get the block above current into next
+              //Get the block to the right of current into next
               Block temp = activeBlocks.get(i);
               if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
               {
