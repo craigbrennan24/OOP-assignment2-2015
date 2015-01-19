@@ -154,7 +154,7 @@ class PointMessage extends Points
   float start;
   color c;
   
-  PointMessage(int type, int x, int y)
+  PointMessage(char type, int x, int y)
   {
     this.type = type;
     xPos = x;
@@ -164,22 +164,38 @@ class PointMessage extends Points
     c = color( 255, 255, 255, 255 );
     switch( type )
     {
-      case 0:
+      case 'i':
+        type = 0;
         message = "+5";
         break;
        
-      case 3:
-      case 5:
+      case 'o':
+        type = 3;
         message = "+7";
         break;
         
-      case 2:
-      case 1:
+      case 't':
+        type = 5;
+        message = "+7";
+        break;
+        
+      case 'l':
+        type = 2;
         message = "+8";
         break;
         
-      case 4:
-      case 6:
+      case 'j':
+        type = 1;
+        message = "+8";
+        break;
+        
+      case 's':
+        type = 4;
+        message = "+9";
+        break;
+        
+      case 'z':
+        type = 6;
         message = "+9";
         break;
     }
