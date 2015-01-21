@@ -333,7 +333,7 @@ int findS_block( Block block )
         {
           if( blickGrid[current.xPos][current.yPos+1].isOccupied )
           {
-            for( int i = 0; i < activeBlocks.size(); i++ )// MIGHT CRASH IDK
+            for( int i = 0; i < activeBlocks.size(); i++ )
             {
               Block temp = activeBlocks.get(i);
               if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
@@ -365,7 +365,7 @@ int findS_block( Block block )
             if( blickGrid[current.xPos-1][current.yPos].isOccupied )
             {
               //if there is a block to the left of current
-              for( int i = 0; i < activeBlocks.size(); i++ )// ALSO MIGHT CRASH
+              for( int i = 0; i < activeBlocks.size(); i++ )
               {
                 //Get the block to the left of current into next
                 Block temp = activeBlocks.get(i);
@@ -396,7 +396,7 @@ int findS_block( Block block )
           }
           else
           {
-            //If not at the left side of the board
+            //If too close to left side of the board
             finished = true;
           }
         }
@@ -416,7 +416,7 @@ int findS_block( Block block )
       checkVert = true;
       for( int i = 0; i < 4; i++ )
       {
-        if( i < 3 )
+        if( i < 3 )//Don't move next above current on last block, nothing will be there
         {
           for( int j = 0; j < activeBlocks.size(); j++ )
           {
@@ -426,18 +426,18 @@ int findS_block( Block block )
               if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
               {
                 next = temp;
+                checkVert = !checkVert;
                 break;
               }
-              checkVert = !checkVert;
             }
             else
             {
               if( temp.xPos == (current.xPos-1) && temp.yPos == current.yPos )
               {
                 next = temp;
+                checkVert = !checkVert;
                 break;
               }
-              checkVert = !checkVert;
             }
           }
         }
@@ -457,7 +457,7 @@ int findS_block( Block block )
       }
     }
     
-//---------HORIZONTAL 'S' BLOCK--------- come back to this after vert is working
+//---------HORIZONTAL 'S' BLOCK---------
     
     if( !found )//If no vertical block was found
     {
@@ -562,18 +562,18 @@ int findS_block( Block block )
                 if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
                 {
                   next = temp;
+                  checkVert = !checkVert;
                   break;
                 }
-                checkVert = !checkVert;
               }
               else
               {
                 if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
                 {
                   next = temp;
+                  checkVert = !checkVert;
                   break;
                 }
-                checkVert = !checkVert;
               }
             }
           }
