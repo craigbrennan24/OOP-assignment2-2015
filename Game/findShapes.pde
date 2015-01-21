@@ -458,7 +458,7 @@ int findS_block( Block block )
     }
     
 //---------HORIZONTAL 'S' BLOCK--------- come back to this after vert is working
-    /*
+    
     if( !found )//If no vertical block was found
     {
       //Search and remove horizontal block
@@ -467,53 +467,89 @@ int findS_block( Block block )
       current = block;
       connections = 0;
       finished = false;
+      checkVert = false;
       while( !finished )
       {
         if( current.xPos < (cols-1) )
         {
-          if( blickGrid[current.xPos+1][current.yPos].isOccupied )
+          if( checkVert )
           {
-            //if there is a block to the right of current
-            for( int i = 0; i <= activeBlocks.size(); i++ )
+            if( blickGrid[current.xPos][current.yPos+1].isOccupied )
             {
-              //Get the block to the right of current into next
-              Block temp = activeBlocks.get(i);
-              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
+              for( int i = 0; i <= activeBlocks.size(); i++ )// MIGHT CRASH IDK
               {
-                next = temp;
-                break;
+                Block temp = activeBlocks.get(i);
+                if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
+                {
+                  next = temp;
+                  break;
+                }
               }
-            }
-            if( current.type == next.type )
-            {
-              //If current and next are same block type, move onto next set
-              connections++;
-              current = next;
+              if( current.type == next.type )
+              {
+                connections++;
+                current = next;
+                checkVert = !checkVert;
+              }
+              else
+              {
+                finished = true;
+              }
             }
             else
             {
-              //If block to the right of current is different type
               finished = true;
             }
           }
           else
           {
-            //If there is no block to the right of current
-            finished = true;
+            if( blickGrid[current.xPos+1][current.yPos].isOccupied )
+            {
+              //if there is a block to the right of current
+              for( int i = 0; i < activeBlocks.size(); i++ )// ALSO MIGHT CRASH
+              {
+                //Get the block to the right of current into next
+                Block temp = activeBlocks.get(i);
+                if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
+                {
+                  next = temp;
+                  break;
+                }
+              }
+              if( current.type == next.type )
+              {
+                //If current and next are same block type, move onto next set
+                connections++;
+                checkVert = !checkVert;
+                current = next;
+              }
+              else
+              {
+                //If block to the right of current is different type
+                finished = true;
+              }
+            }
+            else
+            {
+              //If there is no block to the right of current
+              finished = true;
+            }
           }
         }
         else
         {
-          //If at the right edge of the gameboard
+          //If at the top of the gameboard
           finished = true;
         }
       }
       if( connections == 3 )
       {
         found = true;
-        //Delete the blocks
         blockSearchResult = 1;
+        //Delete the blocks
         current = block;
+        next = current;
+        checkVert = false;
         for( int i = 0; i < 4; i++ )
         {
           if( i < 3 )
@@ -521,10 +557,23 @@ int findS_block( Block block )
             for( int j = 0; j < activeBlocks.size(); j++ )
             {
               Block temp = activeBlocks.get(j);
-              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
+              if( checkVert )
               {
-                next = temp;
-                break;
+                if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
+                {
+                  next = temp;
+                  break;
+                }
+                checkVert = !checkVert;
+              }
+              else
+              {
+                if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
+                {
+                  next = temp;
+                  break;
+                }
+                checkVert = !checkVert;
               }
             }
           }
@@ -533,7 +582,6 @@ int findS_block( Block block )
             Block temp = activeBlocks.get(j);
             if( temp.xPos == current.xPos && temp.yPos == current.yPos )
             {
-              finishedRemovingBlocks = false;
               blickGrid[temp.xPos][temp.yPos].isOccupied = false;
               blickGrid[temp.xPos][temp.yPos].isSettled = false;
               activeBlocks.remove(j);
@@ -545,7 +593,6 @@ int findS_block( Block block )
         }
       }
     }
-    */
   }
   return blockSearchResult;
 }
