@@ -333,7 +333,7 @@ int findS_block( Block block )
         {
           if( blickGrid[current.xPos][current.yPos+1].isOccupied )
           {
-            for( int i = 0; i <= activeBlocks.size(); i++ )// MIGHT CRASH IDK
+            for( int i = 0; i < activeBlocks.size(); i++ )// MIGHT CRASH IDK
             {
               Block temp = activeBlocks.get(i);
               if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
@@ -649,6 +649,10 @@ void removeFinishedShapes()
           }
         }
       }
+    }
+    if( !allBlocksSettled() )
+    {
+      settleBlocks();
     }
   }
 }
