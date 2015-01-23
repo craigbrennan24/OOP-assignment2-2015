@@ -18,7 +18,7 @@ Blick blickGrid[][] = new Blick[cols][rows];
 ArrayList<Block> activeBlocks;
 ArrayList<PointMessage> pointMessages;
 boolean[] keys = new boolean[526];
-int startingLines = 8;
+int startingLines = 2;
 float gameTime = 0;
 float gameTimeBuffer = 0;
 Points points = new Points();
@@ -45,7 +45,7 @@ boolean finishedRemovingBlocks = true;
 
 //DEBUG FLAGS
 boolean DEBUG_showOccupiedIndicators = false;
-boolean DEBUG_showConnectedBlocks = true;
+boolean DEBUG_showConnectedBlocks = false;
 boolean DEBUG_showNumberGrid = false;
 
 

@@ -214,7 +214,7 @@ void drawPauseMessage()
   text( s, (width/2)-100, 200 );
 }
 
-/*begintest
+/* i might use these i dont know
 void keyPressed()
 {
   keys[keyCode] = true;
@@ -231,72 +231,10 @@ boolean checkKey( char theKey )
 }
 */
 
-void keyPressed()
-{
-  if( !gameOver )
-  {
-    if( key == 'p' || key == 'P' )
-    {
-      paused = !paused;
-    }
-    if( blockInPlay )
-    {
-      if( key == CODED )
-      {
-        if( keyCode == LEFT )
-        {
-          controlBlock( 0 );
-        }
-        else if( keyCode == RIGHT )
-        {
-          controlBlock( 1 );
-        }
-        else if( keyCode == DOWN )
-        {
-          controlBlock( 2 );
-        }
-      }
-      else
-      {
-        if( key == 'a' || key == 'A' )
-        {
-          controlBlock( 0 );
-        }
-        else if( key == 'd' || key == 'D' )
-        {
-          controlBlock( 1 );
-        }
-        else if( key == 's' || key == 'S' )
-        {
-          controlBlock( 2 );
-        }
-        else if( key == ' ' )
-        {
-          dropNextDelay = 0;
-        }
-      }
-    }
-    else
-    {
-      if( key == ENTER )
-      {
-        dropBlock();
-      }
-    }
-  }
-  else
-  {
-    if( key == ENTER )
-    {
-      gameOver = false;
-      setup();
-    }
-  }
-  
-}
-
 void controlBlock( int type )
 {
+  //****Interprets player input and moves block accordingly****
+  //Int value passed in determines which direction player wishes to move block
   //type 0 = move left
   //type 1 = move right
   //type 2 = move down
@@ -335,20 +273,7 @@ void controlBlock( int type )
   }
 }
 
-void mousePressed()
-{
-  if( mouseButton == LEFT )
-  {
-    clearBoard();
-  }
-  else if( mouseButton == RIGHT )
-  {
-    if( activeBlocks.isEmpty() )
-    {
-      randomizeStart();
-    }
-  }
-}
+
 
 void setupBlicks()
 {
