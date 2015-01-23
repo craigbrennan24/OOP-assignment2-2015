@@ -18,7 +18,7 @@ Blick blickGrid[][] = new Blick[cols][rows];
 ArrayList<Block> activeBlocks;
 ArrayList<PointMessage> pointMessages;
 boolean[] keys = new boolean[526];
-int startingLines = 2;
+int startingLines = 8;
 float gameTime = 0;
 float gameTimeBuffer = 0;
 Points points = new Points();
@@ -31,7 +31,7 @@ boolean activeBlockDrop_flag = false;
 float normalDropSpeed = 0.25;
 float blockDropSpeed = normalDropSpeed;
 float fastDropSpeed = 0;
-float dropNext = 0.25;
+float dropNext = 0;
 float dropNextDelay = 500;
 float blockDown = 0;
 boolean blockDown_flag = false;
@@ -61,6 +61,7 @@ void setup()
    activeBlocks = new ArrayList<Block>();
    pointMessages= new ArrayList<PointMessage>();
    randomizeStart();
+   removeFinishedShapes();//Run once at start to remove finished shapes if they appear
 }
 
 void draw()

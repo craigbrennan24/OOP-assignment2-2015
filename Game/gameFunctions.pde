@@ -56,6 +56,7 @@ void randomizeStart()
       }
     }
   }
+  removeFinishedShapes();
 }
 
 int weightedColourChoice( int previousType )

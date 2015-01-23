@@ -605,7 +605,7 @@ void removeFinishedShapes()
     while( !finishedRemovingBlocks )
     {
       finishedRemovingBlocks = true;
-      if( activeBlocks.isEmpty() == false )
+      if( !activeBlocks.isEmpty() )
       {
         Block temp;
         int x = activeBlocks.size() - 1;
