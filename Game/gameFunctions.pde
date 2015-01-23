@@ -17,7 +17,7 @@ void randomizeStart()
   //Blocks have 50% less chance to be next to the same colour
   //than new colours
   int i, j;
-  boolean newChain = false;
+  boolean newChain = true;
   
   for( i = 0; i < startingLines; i++)
   {

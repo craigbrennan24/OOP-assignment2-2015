@@ -146,7 +146,7 @@ int findI_block( Block block )
         if( blickGrid[current.xPos][current.yPos+1].isOccupied )
         {
           //if there is a block above current
-          for( int i = 0; i <= activeBlocks.size(); i++ )
+          for( int i = 0; i < activeBlocks.size(); i++ )
           {
             //Get the block above current into next
             Block temp = activeBlocks.get(i);
@@ -233,7 +233,7 @@ int findI_block( Block block )
           if( blickGrid[current.xPos+1][current.yPos].isOccupied )
           {
             //if there is a block to the right of current
-            for( int i = 0; i <= activeBlocks.size(); i++ )
+            for( int i = 0; i < activeBlocks.size(); i++ )
             {
               //Get the block to the right of current into next
               Block temp = activeBlocks.get(i);
@@ -277,7 +277,7 @@ int findI_block( Block block )
         {
           if( i < 3 )
           {
-            for( int j = 0; j <= activeBlocks.size(); j++ )
+            for( int j = 0; j < activeBlocks.size(); j++ )
             {
               Block temp = activeBlocks.get(j);
               if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
@@ -287,7 +287,7 @@ int findI_block( Block block )
               }
             }
           }
-          for( int j = 0; j <= activeBlocks.size(); j++ )
+          for( int j = 0; j < activeBlocks.size(); j++ )
           {
             Block temp = activeBlocks.get(j);
             if( temp.xPos == current.xPos && temp.yPos == current.yPos )
@@ -470,13 +470,13 @@ int findS_block( Block block )
       checkVert = false;
       while( !finished )
       {
-        if( current.xPos < (cols-1) )
+        if( current.xPos < (cols-1) && current.yPos < (rows-1) )
         {
           if( checkVert )
           {
             if( blickGrid[current.xPos][current.yPos+1].isOccupied )
             {
-              for( int i = 0; i <= activeBlocks.size(); i++ )// MIGHT CRASH IDK
+              for( int i = 0; i < activeBlocks.size(); i++ )// MIGHT CRASH IDK
               {
                 Block temp = activeBlocks.get(i);
                 if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
@@ -643,6 +643,11 @@ void removeFinishedShapes()
             {
               //If found a vertical S block
               pointMessages.add( new PointMessage( 's', temp.xPos, (temp.yPos+1) ) );
+            }
+            else if( search == 1 )
+            {
+              //If found a horizontal S block
+              pointMessages.add( new PointMessage( 's', (temp.xPos+1), (temp.yPos+1) ) );
             }
             finishedRemovingBlocks = false;
             settleBlocks();
