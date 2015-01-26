@@ -143,19 +143,9 @@ int findI_block( Block block )
     {
       if( current.yPos < (rows-1) )
       {
-        if( blickGrid[current.xPos][current.yPos+1].isOccupied )
+        if( blickGrid[current.xPos][current.yPos+1].isOccupied )//if there is a block above current
         {
-          //if there is a block above current
-          for( int i = 0; i < activeBlocks.size(); i++ )
-          {
-            //Get the block above current into next
-            Block temp = activeBlocks.get(i);
-            if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-            {
-              next = temp;
-              break;
-            }
-          }
+          next = getAdjacentBlock( current, 0 );//Get block above current into next
           if( current.type == next.type )
           {
             //If current and next are same block type, move onto next set
@@ -190,15 +180,7 @@ int findI_block( Block block )
       {
         if( i < 3 )
         {
-          for( int j = 0; j < activeBlocks.size(); j++ )
-          {
-            Block temp = activeBlocks.get(j);
-            if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-            {
-              next = temp;
-              break;
-            }
-          }
+          next = getAdjacentBlock( current, 0 );
         }
         for( int j = 0; j < activeBlocks.size(); j++ )
         {
@@ -233,16 +215,7 @@ int findI_block( Block block )
           if( blickGrid[current.xPos+1][current.yPos].isOccupied )
           {
             //if there is a block to the right of current
-            for( int i = 0; i < activeBlocks.size(); i++ )
-            {
-              //Get the block to the right of current into next
-              Block temp = activeBlocks.get(i);
-              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
-              {
-                next = temp;
-                break;
-              }
-            }
+            next = getAdjacentBlock( current, 1 );
             if( current.type == next.type )
             {
               //If current and next are same block type, move onto next set
@@ -277,15 +250,7 @@ int findI_block( Block block )
         {
           if( i < 3 )
           {
-            for( int j = 0; j < activeBlocks.size(); j++ )
-            {
-              Block temp = activeBlocks.get(j);
-              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
-              {
-                next = temp;
-                break;
-              }
-            }
+            next = getAdjacentBlock( current, 1 );
           }
           for( int j = 0; j < activeBlocks.size(); j++ )
           {
@@ -333,15 +298,7 @@ int findS_block( Block block )
         {
           if( blickGrid[current.xPos][current.yPos+1].isOccupied )
           {
-            for( int i = 0; i < activeBlocks.size(); i++ )
-            {
-              Block temp = activeBlocks.get(i);
-              if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-              {
-                next = temp;
-                break;
-              }
-            }
+            next = getAdjacentBlock( current, 0 );
             if( current.type == next.type )
             {
               connections++;
@@ -365,16 +322,7 @@ int findS_block( Block block )
             if( blickGrid[current.xPos-1][current.yPos].isOccupied )
             {
               //if there is a block to the left of current
-              for( int i = 0; i < activeBlocks.size(); i++ )
-              {
-                //Get the block to the left of current into next
-                Block temp = activeBlocks.get(i);
-                if( temp.xPos == (current.xPos-1) && temp.yPos == current.yPos )
-                {
-                  next = temp;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 3 );
               if( current.type == next.type )
               {
                 //If current and next are same block type, move onto next set
@@ -418,27 +366,15 @@ int findS_block( Block block )
       {
         if( i < 3 )//Don't move next above current on last block, nothing will be there
         {
-          for( int j = 0; j < activeBlocks.size(); j++ )
+          if( checkVert )
           {
-            Block temp = activeBlocks.get(j);
-            if( checkVert )
-            {
-              if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-              {
-                next = temp;
-                checkVert = !checkVert;
-                break;
-              }
-            }
-            else
-            {
-              if( temp.xPos == (current.xPos-1) && temp.yPos == current.yPos )
-              {
-                next = temp;
-                checkVert = !checkVert;
-                break;
-              }
-            }
+            next = getAdjacentBlock( current, 0 );
+            checkVert = !checkVert;
+          }
+          else
+          {
+            next = getAdjacentBlock( current, 3 );
+            checkVert = !checkVert;
           }
         }
         for( int j = 0; j < activeBlocks.size(); j++ )
@@ -476,15 +412,7 @@ int findS_block( Block block )
           {
             if( blickGrid[current.xPos][current.yPos+1].isOccupied )
             {
-              for( int i = 0; i < activeBlocks.size(); i++ )
-              {
-                Block temp = activeBlocks.get(i);
-                if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-                {
-                  next = temp;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 0 );
               if( current.type == next.type )
               {
                 connections++;
@@ -506,16 +434,7 @@ int findS_block( Block block )
             if( blickGrid[current.xPos+1][current.yPos].isOccupied )
             {
               //if there is a block to the right of current
-              for( int i = 0; i < activeBlocks.size(); i++ )
-              {
-                //Get the block to the right of current into next
-                Block temp = activeBlocks.get(i);
-                if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
-                {
-                  next = temp;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 1 );
               if( current.type == next.type )
               {
                 //If current and next are same block type, move onto next set
@@ -554,27 +473,15 @@ int findS_block( Block block )
         {
           if( i < 3 )
           {
-            for( int j = 0; j < activeBlocks.size(); j++ )
+            if( checkVert )
             {
-              Block temp = activeBlocks.get(j);
-              if( checkVert )
-              {
-                if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-                {
-                  next = temp;
-                  checkVert = !checkVert;
-                  break;
-                }
-              }
-              else
-              {
-                if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
-                {
-                  next = temp;
-                  checkVert = !checkVert;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 0 );
+              checkVert = !checkVert;
+            }
+            else
+            {
+              next = getAdjacentBlock( current, 1 );
+              checkVert = !checkVert;
             }
           }
           for( int j = 0; j < activeBlocks.size(); j++ )
@@ -623,15 +530,7 @@ int findZ_block( Block block )
         {
           if( blickGrid[current.xPos][current.yPos+1].isOccupied )
           {
-            for( int i = 0; i < activeBlocks.size(); i++ )
-            {
-              Block temp = activeBlocks.get(i);
-              if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-              {
-                next = temp;
-                break;
-              }
-            }
+            next = getAdjacentBlock( current, 0 );
             if( current.type == next.type )
             {
               connections++;
@@ -655,16 +554,7 @@ int findZ_block( Block block )
             if( blickGrid[current.xPos+1][current.yPos].isOccupied )
             {
               //if there is a block to the right of current
-              for( int i = 0; i < activeBlocks.size(); i++ )
-              {
-                //Get the block to the right of current into next
-                Block temp = activeBlocks.get(i);
-                if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
-                {
-                  next = temp;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 1 );
               if( current.type == next.type )
               {
                 //If current and next are same block type, move onto next set
@@ -708,27 +598,15 @@ int findZ_block( Block block )
       {
         if( i < 3 )//Don't move next above current on last block, nothing will be there
         {
-          for( int j = 0; j < activeBlocks.size(); j++ )
+          if( checkVert )
           {
-            Block temp = activeBlocks.get(j);
-            if( checkVert )
-            {
-              if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-              {
-                next = temp;
-                checkVert = !checkVert;
-                break;
-              }
-            }
-            else
-            {
-              if( temp.xPos == (current.xPos+1) && temp.yPos == current.yPos )
-              {
-                next = temp;
-                checkVert = !checkVert;
-                break;
-              }
-            }
+            next = getAdjacentBlock( current, 0 );
+            checkVert = !checkVert;
+          }
+          else
+          {
+            next = getAdjacentBlock( current, 1 );
+            checkVert = !checkVert;
           }
         }
         for( int j = 0; j < activeBlocks.size(); j++ )
@@ -766,15 +644,7 @@ int findZ_block( Block block )
           {
             if( blickGrid[current.xPos][current.yPos+1].isOccupied )
             {
-              for( int i = 0; i < activeBlocks.size(); i++ )
-              {
-                Block temp = activeBlocks.get(i);
-                if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-                {
-                  next = temp;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 0 );
               if( current.type == next.type )
               {
                 connections++;
@@ -796,16 +666,7 @@ int findZ_block( Block block )
             if( blickGrid[current.xPos-1][current.yPos].isOccupied )
             {
               //if there is a block to the left of current
-              for( int i = 0; i < activeBlocks.size(); i++ )
-              {
-                //Get the block to the left of current into next
-                Block temp = activeBlocks.get(i);
-                if( temp.xPos == (current.xPos-1) && temp.yPos == current.yPos )
-                {
-                  next = temp;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 3 );
               if( current.type == next.type )
               {
                 //If current and next are same block type, move onto next set
@@ -844,27 +705,15 @@ int findZ_block( Block block )
         {
           if( i < 3 )
           {
-            for( int j = 0; j < activeBlocks.size(); j++ )
+            if( checkVert )
             {
-              Block temp = activeBlocks.get(j);
-              if( checkVert )
-              {
-                if( temp.xPos == current.xPos && temp.yPos == (current.yPos+1) )
-                {
-                  next = temp;
-                  checkVert = !checkVert;
-                  break;
-                }
-              }
-              else
-              {
-                if( temp.xPos == (current.xPos-1) && temp.yPos == current.yPos )
-                {
-                  next = temp;
-                  checkVert = !checkVert;
-                  break;
-                }
-              }
+              next = getAdjacentBlock( current, 0 );
+              checkVert = !checkVert;
+            }
+            else
+            {
+              next = getAdjacentBlock( current, 3 );
+              checkVert = !checkVert;
             }
           }
           for( int j = 0; j < activeBlocks.size(); j++ )
@@ -885,6 +734,314 @@ int findZ_block( Block block )
     }
   }
   return blockSearchResult;
+}
+
+int findL_block( Block block )
+{
+  //Returns -1 if L block was not found
+  //Returns these integer values to show which rotation of shape was found
+  //   0        1        2        3
+  //--XX---- -------- --XXXX-- --------
+  //--XX---- XXXXXXXX --XXXX-- ------XX
+  //--XX---- XXXXXXXX ----XX-- ------XX
+  //--XX---- XX------ ----XX-- XXXXXXXX
+  //--XXXX-- XX------ ----XX-- XXXXXXXX
+  //--XXXX-- -------- ----XX-- --------
+  boolean found = false;
+  int blockSearchResult = -1;
+  if( blockTypeNearby( block ) )
+  {
+    int connections = 0;
+    Block current = new Block(), next = new Block();
+    current = block;
+
+    boolean finished = false;
+    boolean checkVert = false;
+    int rotationSearch = 0; //Which rotation of shape currently being searched for, change to -1 if one was found to stop search
+    while( !finished )
+    {
+      if( rotationSearch == 0 ) //Search for L - 0
+      {
+        if( !checkVert )
+        {
+          if( current.xPos > 0 )
+          {
+            if( blickGrid[(current.xPos-1)][current.yPos].isOccupied )
+            {
+              next = getAdjacentBlock( current, 3 );
+              if( current.type == next.type )
+              {
+                connections++;
+                checkVert = true;
+              }
+              else
+              {
+                rotationSearch = 1;
+              }
+            }
+          }
+          else
+          {
+            rotationSearch = 1;
+          }
+        }
+        else
+        {
+          for( int i = 0; i < 3; i++ )
+          {
+            if( current.yPos < (rows-1) )
+            {
+              if( blickGrid[current.xPos][(current.yPos+1)].isOccupied )
+              {
+                next = getAdjacentBlock( current, 0 );
+                if( current.type == next.type )
+                {
+                  connections++;
+                  if( i == 2 )
+                  {
+                    finished = true;
+                  }
+                }
+                else
+                {
+                  rotationSearch = 1;
+                }
+              }
+              else
+              {
+                rotationSearch = 1;
+                break;
+              }
+            }
+            else
+            {
+              rotationSearch = 1;
+            }
+            if( rotationSearch == 1 )
+            {
+              break;
+            }
+            current = next;
+          }
+        }
+      }
+      if( rotationSearch == 1 ) //Search for L - 1
+      {
+        current = block;
+        connections = 0;
+        checkVert = false;
+        
+        if( checkVert )
+        {
+          if( current.yPos < (rows-1) )
+          {
+            if( blickGrid[current.xPos][(current.yPos+1)].isOccupied )
+            {
+              next = getAdjacentBlock( current, 0 );
+              if( current.type == next.type )
+              {
+                connections++;
+                checkVert = false;
+              }
+              else
+              {
+                rotationSearch = 2;
+              }
+            }
+          }
+          else
+          {
+            rotationSearch = 2;
+          }
+        }
+        else
+        {
+          for( int i = 0; i < 3; i++ )
+          {
+            if( current.xPos < (cols-1) )
+            {
+              if( blickGrid[(current.xPos+1)][current.yPos].isOccupied )
+              {
+                next = getAdjacentBlock( current, 1 );
+                if( current.type == next.type )
+                {
+                  connections++;
+                  if( i == 2 )
+                  {
+                    finished = true;
+                  }
+                }
+                else
+                {
+                  rotationSearch = 2;
+                }
+              }
+              else
+              {
+                rotationSearch = 2;
+                break;
+              }
+            }
+            else
+            {
+              rotationSearch = 2;
+            }
+            if( rotationSearch == 2 )
+            {
+              break;
+            }
+            current = next;
+          }
+        }
+      }
+      if( rotationSearch == 2 )//Search for L - 2
+      {
+        current = block;
+        connections = 0;
+        checkVert = false;
+        
+        if( !checkVert )
+        {
+          if( current.xPos < (rows-1) )
+          {
+            if( blickGrid[(current.xPos+1)][current.yPos].isOccupied )
+            {
+              next = getAdjacentBlock( current, 1 );
+              if( current.type == next.type )
+              {
+                connections++;
+                checkVert = true;
+              }
+              else
+              {
+                rotationSearch = 3;
+              }
+            }
+          }
+          else
+          {
+            rotationSearch = 3;
+          }
+        }
+        else
+        {
+          for( int i = 0; i < 3; i++ )
+          {
+            if( current.yPos > 0 )
+            {
+              if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
+              {
+                next = getAdjacentBlock( current, 2 );
+                if( current.type == next.type )
+                {
+                  connections++;
+                  if( i == 2 )
+                  {
+                    finished = true;
+                  }
+                }
+                else
+                {
+                  rotationSearch = 3;
+                }
+              }
+              else
+              {
+                rotationSearch = 3;
+                break;
+              }
+            }
+            else
+            {
+              rotationSearch = 3;
+            }
+            if( rotationSearch == 3 )
+            {
+              break;
+            }
+            current = next;
+          }
+        }
+      }
+      if( rotationSearch == 3 )//Search for L - 3
+      {
+        current = block;
+        connections = 0;
+        checkVert = true;
+        
+        if( checkVert )
+        {
+          if( current.yPos > 0 )
+          {
+            if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
+            {
+              next = getAdjacentBlock( current, 2 );
+              if( current.type == next.type )
+              {
+                connections++;
+                checkVert = true;
+              }
+              else
+              {
+                rotationSearch = -1;
+              }
+            }
+          }
+          else
+          {
+            rotationSearch = -1;
+          }
+        }
+        else
+        {
+          for( int i = 0; i < 3; i++ )
+          {
+            if( current.yPos > 0 )
+            {
+              if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
+              {
+                next = getAdjacentBlock( current, 2 );
+                if( current.type == next.type )
+                {
+                  connections++;
+                  if( i == 2 )
+                  {
+                    finished = true;
+                  }
+                }
+                else
+                {
+                  rotationSearch = -1;
+                }
+              }
+              else
+              {
+                rotationSearch = -1;
+                break;
+              }
+            }
+            else
+            {
+              rotationSearch = -1;
+            }
+            if( rotationSearch == -1 )
+            {
+              break;
+            }
+            current = next;
+          }
+        }
+      }
+      
+      if( rotationSearch == -1 )
+      {
+        finished = true;
+      }
+    }//finished searching, begin removal
+    
+    //Add code for removal here
+    
+  }
 }
 
 void removeFinishedShapes()
@@ -978,4 +1135,45 @@ void removeFinishedShapes()
       settleBlocks();
     }
   }
+}
+
+Block getAdjacentBlock( Block current, int direction )
+{
+  //NOTE: Use this method only if you know for certain a block does exist in the space you are trying to take from
+  // 0 - UP
+  // 1 - RIGHT
+  // 2 - DOWN
+  // 3 - LEFT
+  Block block = null;
+  int xDir = 0;
+  int yDir = 0;
+  switch( direction )
+  {
+    case 0:
+      yDir = 1;
+      break;
+      
+    case 1:
+      xDir = 1;
+      break;
+      
+    case 2:
+      yDir = -1;
+      break;
+      
+    case 3:
+      xDir = -1;
+      break;
+  }
+  
+  for( int i = 0; i < activeBlocks.size(); i++ )
+  {
+    Block temp = activeBlocks.get(i);
+    if( temp.xPos == (current.xPos+xDir) && temp.yPos == (current.yPos+yDir) )
+    {
+      block = temp;
+      break;
+    }
+  }
+  return block;
 }
