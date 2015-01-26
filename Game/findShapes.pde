@@ -762,7 +762,7 @@ int findL_block( Block block )
     {
       if( rotationSearch == 0 ) //Search for L - 0
       {
-        if( !checkVert )
+        if( checkVert )
         {
           if( current.xPos > 0 )
           {
@@ -799,6 +799,7 @@ int findL_block( Block block )
                   connections++;
                   if( i == 2 )
                   {
+                    blockSearchResult = 0;
                     finished = true;
                   }
                 }
@@ -819,17 +820,18 @@ int findL_block( Block block )
             }
             if( rotationSearch == 1 )
             {
+              rotationSearch = -1;
               break;
             }
             current = next;
           }
         }
-      }
+      }/*
       if( rotationSearch == 1 ) //Search for L - 1
       {
         current = block;
         connections = 0;
-        checkVert = false;
+        checkVert = true;
         
         if( checkVert )
         {
@@ -868,6 +870,7 @@ int findL_block( Block block )
                   connections++;
                   if( i == 2 )
                   {
+                    blockSearchResult = 1;
                     finished = true;
                   }
                 }
@@ -937,6 +940,7 @@ int findL_block( Block block )
                   connections++;
                   if( i == 2 )
                   {
+                    blockSearchResult = 2;
                     finished = true;
                   }
                 }
@@ -965,12 +969,13 @@ int findL_block( Block block )
       }
       if( rotationSearch == 3 )//Search for L - 3
       {
-        current = block;
-        connections = 0;
+        
         checkVert = true;
         
         if( checkVert )
         {
+          current = block;
+          connections = 0;
           if( current.yPos > 0 )
           {
             if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
@@ -1006,6 +1011,7 @@ int findL_block( Block block )
                   connections++;
                   if( i == 2 )
                   {
+                    blockSearchResult = 3;
                     finished = true;
                   }
                 }
@@ -1031,17 +1037,88 @@ int findL_block( Block block )
             current = next;
           }
         }
-      }
+      }*/
       
       if( rotationSearch == -1 )
       {
+        blockSearchResult = -1;
         finished = true;
       }
     }//finished searching, begin removal
     
     //Add code for removal here
-    
+    if( rotationSearch != -1 )//If found a shape
+    {
+        //Delete the blocks
+        current = block;
+        next = current;
+        checkVert = false;
+        int verDir = 0;
+        int horDir = 0;
+        switch( rotationSearch )
+        {
+          case 0:
+            verDir = 0;
+            horDir = 3;
+            checkVert = false;
+            break;
+          
+          case 1:
+            verDir = 0;
+            horDir = 1;
+            checkVert = true;
+            break;
+          
+          case 2:
+            verDir = 2;
+            horDir = 1;
+            checkVert = false;
+            break;
+          
+          case 3:
+            verDir = 2;
+            horDir = 3;
+            checkVert = true;
+            break;
+        }
+        for( int i = 0; i < 4; i++ )
+        {
+          if( i < 3 )
+          {
+            if( checkVert )
+            {
+              next = getAdjacentBlock( current, verDir );
+              if( rotationSearch == 1 || rotationSearch == 3 )
+              {
+                checkVert = !checkVert;
+              }
+            }
+            else
+            {
+              next = getAdjacentBlock( current, horDir );
+              if( rotationSearch == 0 || rotationSearch == 2 )
+              {
+                checkVert = !checkVert;
+              }
+            }
+          }
+          for( int j = 0; j < activeBlocks.size(); j++ )
+          {
+            Block temp = activeBlocks.get(j);
+            if( temp.xPos == current.xPos && temp.yPos == current.yPos )
+            {
+              blickGrid[temp.xPos][temp.yPos].isOccupied = false;
+              blickGrid[temp.xPos][temp.yPos].isSettled = false;
+              activeBlocks.remove(j);
+              bubbleSortBlocks(1);
+              break;
+            }
+          }
+          current = next;
+        }
+    }//Finished removing
   }
+  return blockSearchResult;
 }
 
 void removeFinishedShapes()
@@ -1081,7 +1158,6 @@ void removeFinishedShapes()
               pointMessages.add( new PointMessage( 'i', (temp.xPos+1), temp.yPos ) );
             }
             finishedRemovingBlocks = false;
-            settleBlocks();
           }
           if( continueSearch )
           {
@@ -1102,7 +1178,6 @@ void removeFinishedShapes()
                 pointMessages.add( new PointMessage( 's', (temp.xPos+1), (temp.yPos+1) ) );
               }
               finishedRemovingBlocks = false;
-              settleBlocks();
             }
           }
           if( continueSearch )
@@ -1124,8 +1199,37 @@ void removeFinishedShapes()
                 pointMessages.add( new PointMessage( 'z', (temp.xPos+1), (temp.yPos+1) ) );
               }
               finishedRemovingBlocks = false;
-              settleBlocks();
             }
+          }
+          if( continueSearch )
+          {
+            search = findL_block( temp );
+            if( search != -1 )
+            {
+              continueSearch = false;
+              score += points.l;
+              if( search == 0 )
+              {
+                pointMessages.add( new PointMessage( 'l', (temp.xPos-1), (temp.yPos+1) ) );
+              }
+              else if( search == 1 )
+              {
+                pointMessages.add( new PointMessage( 'l', (temp.xPos+2), (temp.yPos+1) ) );
+              }
+              else if( search == 2 )
+              {
+                pointMessages.add( new PointMessage( 'l', (temp.xPos+1), (temp.yPos-2) ) );
+              }
+              else if ( search == 3 ) 
+              {
+                pointMessages.add( new PointMessage( 'l', (temp.xPos-2), (temp.yPos-1) ) );
+              }
+              finishedRemovingBlocks = false;
+            }
+          }
+          if( !continueSearch )
+          {
+            settleBlocks();
           }
         }
       }
