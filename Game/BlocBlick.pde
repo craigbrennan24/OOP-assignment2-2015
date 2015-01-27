@@ -47,6 +47,7 @@ boolean finishedRemovingBlocks = true;
 boolean DEBUG_showOccupiedIndicators = false;
 boolean DEBUG_showConnectedBlocks = false;
 boolean DEBUG_showNumberGrid = false;
+boolean DEBUG_foundL = false;
 
 
 

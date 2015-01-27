@@ -747,376 +747,98 @@ int findL_block( Block block )
   //--XX---- XX------ ----XX-- XXXXXXXX
   //--XXXX-- XX------ ----XX-- XXXXXXXX
   //--XXXX-- -------- ----XX-- --------
-  boolean found = false;
   int blockSearchResult = -1;
   if( blockTypeNearby( block ) )
   {
     int connections = 0;
     Block current = new Block(), next = new Block();
     current = block;
-
-    boolean finished = false;
-    boolean checkVert = false;
+    int[][] searchDirs = new int[][]{ 
+                                   { 3, 0, 0 },
+                                   { 0, 1, 1 },
+                                   { 1, 2, 2 },
+                                   { 2, 3, 3 } };
     int rotationSearch = 0; //Which rotation of shape currently being searched for, change to -1 if one was found to stop search
-    while( !finished )
+    int xDir = 0;
+    int yDir = 0;
+    for( int i = 0; i < 4; i++ )
     {
-      if( rotationSearch == 0 ) //Search for L - 0
+      current = block;
+      connections = 0;
+      for( int j = 0; j < 3; j++ )
       {
-        if( checkVert )
-        {
-          if( current.xPos > 0 )
-          {
-            if( blickGrid[(current.xPos-1)][current.yPos].isOccupied )
-            {
-              next = getAdjacentBlock( current, 3 );
-              if( current.type == next.type )
-              {
-                connections++;
-                checkVert = true;
-              }
-              else
-              {
-                rotationSearch = 1;
-              }
-            }
-          }
-          else
-          {
-            rotationSearch = 1;
-          }
-        }
-        else
-        {
-          for( int i = 0; i < 3; i++ )
-          {
-            if( current.yPos < (rows-1) )
-            {
-              if( blickGrid[current.xPos][(current.yPos+1)].isOccupied )
-              {
-                next = getAdjacentBlock( current, 0 );
-                if( current.type == next.type )
-                {
-                  connections++;
-                  if( i == 2 )
-                  {
-                    blockSearchResult = 0;
-                    finished = true;
-                  }
-                }
-                else
-                {
-                  rotationSearch = 1;
-                }
-              }
-              else
-              {
-                rotationSearch = 1;
-                break;
-              }
-            }
-            else
-            {
-              rotationSearch = 1;
-            }
-            if( rotationSearch == 1 )
-            {
-              rotationSearch = -1;
-              break;
-            }
-            current = next;
-          }
-        }
-      }/*
-      if( rotationSearch == 1 ) //Search for L - 1
-      {
-        current = block;
-        connections = 0;
-        checkVert = true;
-        
-        if( checkVert )
-        {
-          if( current.yPos < (rows-1) )
-          {
-            if( blickGrid[current.xPos][(current.yPos+1)].isOccupied )
-            {
-              next = getAdjacentBlock( current, 0 );
-              if( current.type == next.type )
-              {
-                connections++;
-                checkVert = false;
-              }
-              else
-              {
-                rotationSearch = 2;
-              }
-            }
-          }
-          else
-          {
-            rotationSearch = 2;
-          }
-        }
-        else
-        {
-          for( int i = 0; i < 3; i++ )
-          {
-            if( current.xPos < (cols-1) )
-            {
-              if( blickGrid[(current.xPos+1)][current.yPos].isOccupied )
-              {
-                next = getAdjacentBlock( current, 1 );
-                if( current.type == next.type )
-                {
-                  connections++;
-                  if( i == 2 )
-                  {
-                    blockSearchResult = 1;
-                    finished = true;
-                  }
-                }
-                else
-                {
-                  rotationSearch = 2;
-                }
-              }
-              else
-              {
-                rotationSearch = 2;
-                break;
-              }
-            }
-            else
-            {
-              rotationSearch = 2;
-            }
-            if( rotationSearch == 2 )
-            {
-              break;
-            }
-            current = next;
-          }
-        }
-      }
-      if( rotationSearch == 2 )//Search for L - 2
-      {
-        current = block;
-        connections = 0;
-        checkVert = false;
-        
-        if( !checkVert )
-        {
-          if( current.xPos < (rows-1) )
-          {
-            if( blickGrid[(current.xPos+1)][current.yPos].isOccupied )
-            {
-              next = getAdjacentBlock( current, 1 );
-              if( current.type == next.type )
-              {
-                connections++;
-                checkVert = true;
-              }
-              else
-              {
-                rotationSearch = 3;
-              }
-            }
-          }
-          else
-          {
-            rotationSearch = 3;
-          }
-        }
-        else
-        {
-          for( int i = 0; i < 3; i++ )
-          {
-            if( current.yPos > 0 )
-            {
-              if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
-              {
-                next = getAdjacentBlock( current, 2 );
-                if( current.type == next.type )
-                {
-                  connections++;
-                  if( i == 2 )
-                  {
-                    blockSearchResult = 2;
-                    finished = true;
-                  }
-                }
-                else
-                {
-                  rotationSearch = 3;
-                }
-              }
-              else
-              {
-                rotationSearch = 3;
-                break;
-              }
-            }
-            else
-            {
-              rotationSearch = 3;
-            }
-            if( rotationSearch == 3 )
-            {
-              break;
-            }
-            current = next;
-          }
-        }
-      }
-      if( rotationSearch == 3 )//Search for L - 3
-      {
-        
-        checkVert = true;
-        
-        if( checkVert )
-        {
-          current = block;
-          connections = 0;
-          if( current.yPos > 0 )
-          {
-            if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
-            {
-              next = getAdjacentBlock( current, 2 );
-              if( current.type == next.type )
-              {
-                connections++;
-                checkVert = true;
-              }
-              else
-              {
-                rotationSearch = -1;
-              }
-            }
-          }
-          else
-          {
-            rotationSearch = -1;
-          }
-        }
-        else
-        {
-          for( int i = 0; i < 3; i++ )
-          {
-            if( current.yPos > 0 )
-            {
-              if( blickGrid[current.xPos][(current.yPos-1)].isOccupied )
-              {
-                next = getAdjacentBlock( current, 2 );
-                if( current.type == next.type )
-                {
-                  connections++;
-                  if( i == 2 )
-                  {
-                    blockSearchResult = 3;
-                    finished = true;
-                  }
-                }
-                else
-                {
-                  rotationSearch = -1;
-                }
-              }
-              else
-              {
-                rotationSearch = -1;
-                break;
-              }
-            }
-            else
-            {
-              rotationSearch = -1;
-            }
-            if( rotationSearch == -1 )
-            {
-              break;
-            }
-            current = next;
-          }
-        }
-      }*/
-      
-      if( rotationSearch == -1 )
-      {
-        blockSearchResult = -1;
-        finished = true;
-      }
-    }//finished searching, begin removal
-    
-    //Add code for removal here
-    if( rotationSearch != -1 )//If found a shape
-    {
-        //Delete the blocks
-        current = block;
-        next = current;
-        checkVert = false;
-        int verDir = 0;
-        int horDir = 0;
-        switch( rotationSearch )
+        boolean doSearch = false;
+        switch( searchDirs[i][j] )
         {
           case 0:
-            verDir = 0;
-            horDir = 3;
-            checkVert = false;
+            if( current.yPos < (rows-1) )
+            {
+              doSearch = true;
+            }
+            yDir = 1;
+            xDir = 0;
             break;
-          
+        
           case 1:
-            verDir = 0;
-            horDir = 1;
-            checkVert = true;
+            if( current.xPos < (cols-1) )
+            {
+               doSearch = true; 
+            }
+            yDir = 0;
+            xDir = 1;
             break;
-          
+            
           case 2:
-            verDir = 2;
-            horDir = 1;
-            checkVert = false;
+            if( current.yPos > 0 )
+            {
+              doSearch = true;
+            }
+            yDir = -1;
+            xDir = 0;
             break;
-          
+            
           case 3:
-            verDir = 2;
-            horDir = 3;
-            checkVert = true;
+            if( current.xPos > 0 )
+            {
+              doSearch = true;
+            }
+            yDir = 0;
+            xDir = -1;
             break;
         }
-        for( int i = 0; i < 4; i++ )
+        if( doSearch )
         {
-          if( i < 3 )
+          if( nearbyBlockExists( current, searchDirs[i][j] ) )
           {
-            if( checkVert )
+            next = getAdjacentBlock( current, searchDirs[i][j] );
+            if( sameBlockType( current, next ) )
             {
-              next = getAdjacentBlock( current, verDir );
-              if( rotationSearch == 1 || rotationSearch == 3 )
+              connections++;
+              current = next;
+              if( connections == 3 )
               {
-                checkVert = !checkVert;
+                blockSearchResult = i;//Found block, show type found
+                break;
               }
             }
             else
             {
-              next = getAdjacentBlock( current, horDir );
-              if( rotationSearch == 0 || rotationSearch == 2 )
-              {
-                checkVert = !checkVert;
-              }
-            }
-          }
-          for( int j = 0; j < activeBlocks.size(); j++ )
-          {
-            Block temp = activeBlocks.get(j);
-            if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-            {
-              blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-              blickGrid[temp.xPos][temp.yPos].isSettled = false;
-              activeBlocks.remove(j);
-              bubbleSortBlocks(1);
               break;
             }
           }
-          current = next;
+          else
+          {
+            break;
+          }
         }
-    }//Finished removing
+      }
+      if( connections == 3 )
+      {
+        break;
+      }
+    }
+    
+    //Add code for removal here
   }
   return blockSearchResult;
 }
@@ -1206,7 +928,9 @@ void removeFinishedShapes()
             search = findL_block( temp );
             if( search != -1 )
             {
+              DEBUG_foundL = true;
               continueSearch = false;
+              /*
               score += points.l;
               if( search == 0 )
               {
@@ -1225,6 +949,7 @@ void removeFinishedShapes()
                 pointMessages.add( new PointMessage( 'l', (temp.xPos-2), (temp.yPos-1) ) );
               }
               finishedRemovingBlocks = false;
+              */
             }
           }
           if( !continueSearch )
@@ -1280,4 +1005,55 @@ Block getAdjacentBlock( Block current, int direction )
     }
   }
   return block;
+}
+
+boolean sameBlockType( Block current, Block next )
+{
+  boolean same = false;
+  if( current.type == next.type )
+  {
+    same = true;
+  }
+  return same;
+}
+
+boolean nearbyBlockExists( Block block, int direction )
+{
+  boolean blockExists = false;
+  // 0 - UP
+  // 1 - RIGHT
+  // 2 - DOWN
+  // 3 - LEFT
+  int xDir = 0;
+  int yDir = 0;
+  switch( direction )
+  {
+    case 0:
+      yDir = 1;
+      xDir = 0;
+      break;
+    
+    case 1:
+      yDir = 0;
+      xDir = 1;
+      break;
+      
+    case 2:
+      yDir = -1;
+      xDir = 0;
+      break;
+      
+    case 3:
+      yDir = 0;
+      xDir = -1;
+      break;
+  }
+  
+  if( blickGrid[(block.xPos+xDir)][(block.yPos+yDir)].isOccupied )
+  {
+    blockExists = true;
+  }
+  
+  return blockExists;
+  
 }
