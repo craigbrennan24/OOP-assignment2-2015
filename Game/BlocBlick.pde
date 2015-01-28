@@ -44,10 +44,10 @@ boolean paused = false;
 boolean finishedRemovingBlocks = true;
 
 //DEBUG FLAGS
+boolean DEBUG_showDebugConsole = false;
 boolean DEBUG_showOccupiedIndicators = false;
 boolean DEBUG_showConnectedBlocks = false;
 boolean DEBUG_showNumberGrid = false;
-boolean DEBUG_foundL = false;
 
 
 
@@ -84,7 +84,10 @@ void draw()
       }
       gameTime = millis();
       drawClock();
-      drawDebugConsole();
+      if( DEBUG_showDebugConsole )
+      {
+        drawDebugConsole();
+      }
       updateTimers();
     }
     else

@@ -122,727 +122,6 @@ boolean blockTypeNearby( Block block )
   return blockNearby;
 }
 
-int findI_block( Block block )
-{
-  //Returns -1 if I block was not found
-  //Returns 0 if I block was found and I block is vertical
-  //Returns 1 if I block was found and I block is horizontal
-  boolean found = false;
-  int blockSearchResult = -1;
-  if( blockTypeNearby( block ) )
-  {
-    int connections = 0;
-    Block current = new Block(), next = new Block();
-    current = block;
-   
-//---------VERTICAL 'I' BlOCK --------- 
-
-    //search for and remove vertical block
-    boolean finished = false;
-    while( !finished )
-    {
-      if( current.yPos < (rows-1) )
-      {
-        if( blickGrid[current.xPos][current.yPos+1].isOccupied )//if there is a block above current
-        {
-          next = getAdjacentBlock( current, 0 );//Get block above current into next
-          if( current.type == next.type )
-          {
-            //If current and next are same block type, move onto next set
-            connections++;
-            current = next;
-          }
-          else
-          {
-            //If block above current is different type
-            finished = true;
-          }
-        }
-        else
-        {
-          //If there is no block above current
-          finished = true;
-        }
-      }
-      else
-      {
-        //If at the top of the gameboard
-        finished = true;
-      }
-    }
-    if( connections == 3 )
-    {
-      found = true;
-      blockSearchResult = 0;
-      //Delete the blocks
-      current = block;
-      for( int i = 0; i < 4; i++ )
-      {
-        if( i < 3 )
-        {
-          next = getAdjacentBlock( current, 0 );
-        }
-        for( int j = 0; j < activeBlocks.size(); j++ )
-        {
-          Block temp = activeBlocks.get(j);
-          if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-          {
-            blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-            blickGrid[temp.xPos][temp.yPos].isSettled = false;
-            activeBlocks.remove(j);
-            bubbleSortBlocks(1);
-            break;
-          }
-        }
-        current = next;
-      }
-    }
-    
-//---------HORIZONTAL 'I' BLOCK--------- 
-    
-    if( !found )//If no vertical block was found
-    {
-      //Search and remove horizontal block
-      current = new Block();
-      next = new Block();
-      current = block;
-      connections = 0;
-      finished = false;
-      while( !finished )
-      {
-        if( current.xPos < (cols-1) )
-        {
-          if( blickGrid[current.xPos+1][current.yPos].isOccupied )
-          {
-            //if there is a block to the right of current
-            next = getAdjacentBlock( current, 1 );
-            if( current.type == next.type )
-            {
-              //If current and next are same block type, move onto next set
-              connections++;
-              current = next;
-            }
-            else
-            {
-              //If block to the right of current is different type
-              finished = true;
-            }
-          }
-          else
-          {
-            //If there is no block to the right of current
-            finished = true;
-          }
-        }
-        else
-        {
-          //If at the right edge of the gameboard
-          finished = true;
-        }
-      }
-      if( connections == 3 )
-      {
-        found = true;
-        //Delete the blocks
-        blockSearchResult = 1;
-        current = block;
-        for( int i = 0; i < 4; i++ )
-        {
-          if( i < 3 )
-          {
-            next = getAdjacentBlock( current, 1 );
-          }
-          for( int j = 0; j < activeBlocks.size(); j++ )
-          {
-            Block temp = activeBlocks.get(j);
-            if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-            {
-              blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-              blickGrid[temp.xPos][temp.yPos].isSettled = false;
-              activeBlocks.remove(j);
-              bubbleSortBlocks(1);
-              break;
-            }
-          }
-          current = next;
-        }
-      }
-    }
-  }
-  return blockSearchResult;
-}
-
-int findS_block( Block block )
-{
-  //Returns -1 if S block was not found
-  //Returns 0 if S block was found and S block is vertical
-  //Returns 1 if S block was found and S block is horizontal
-  boolean found = false;
-  int blockSearchResult = -1;
-  if( blockTypeNearby( block ) )
-  {
-    int connections = 0;
-    Block current = new Block(), next = new Block();
-    current = block;
-   
-//---------VERTICAL 'S' BlOCK --------- 
-
-    //search for and remove vertical S block
-    boolean finished = false;
-    boolean checkVert = true;
-    while( !finished )
-    {
-      if( current.yPos < (rows-1) )
-      {
-        if( checkVert )
-        {
-          if( blickGrid[current.xPos][current.yPos+1].isOccupied )
-          {
-            next = getAdjacentBlock( current, 0 );
-            if( current.type == next.type )
-            {
-              connections++;
-              current = next;
-              checkVert = !checkVert;
-            }
-            else
-            {
-              finished = true;
-            }
-          }
-          else
-          {
-            finished = true;
-          }
-        }
-        else
-        {
-          if( current.xPos > 0 )
-          {
-            if( blickGrid[current.xPos-1][current.yPos].isOccupied )
-            {
-              //if there is a block to the left of current
-              next = getAdjacentBlock( current, 3 );
-              if( current.type == next.type )
-              {
-                //If current and next are same block type, move onto next set
-                connections++;
-                checkVert = !checkVert;
-                current = next;
-              }
-              else
-              {
-                //If block to the left of current is different type
-                finished = true;
-              }
-            }
-            else
-            {
-              //If there is no block to the left of current
-              finished = true;
-            }
-          }
-          else
-          {
-            //If too close to left side of the board
-            finished = true;
-          }
-        }
-      }
-      else
-      {
-        //If at the top of the gameboard
-        finished = true;
-      }
-    }
-    if( connections == 3 )
-    {
-      found = true;
-      blockSearchResult = 0;
-      //Delete the blocks
-      current = block;
-      checkVert = true;
-      for( int i = 0; i < 4; i++ )
-      {
-        if( i < 3 )//Don't move next above current on last block, nothing will be there
-        {
-          if( checkVert )
-          {
-            next = getAdjacentBlock( current, 0 );
-            checkVert = !checkVert;
-          }
-          else
-          {
-            next = getAdjacentBlock( current, 3 );
-            checkVert = !checkVert;
-          }
-        }
-        for( int j = 0; j < activeBlocks.size(); j++ )
-        {
-          Block temp = activeBlocks.get(j);
-          if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-          {
-            blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-            blickGrid[temp.xPos][temp.yPos].isSettled = false;
-            activeBlocks.remove(j);
-            bubbleSortBlocks(1);
-            break;
-          }
-        }
-        current = next;
-      }
-    }
-    
-//---------HORIZONTAL 'S' BLOCK---------
-    
-    if( !found )//If no vertical block was found
-    {
-      //Search and remove horizontal block
-      current = new Block();
-      next = new Block();
-      current = block;
-      connections = 0;
-      finished = false;
-      checkVert = false;
-      while( !finished )
-      {
-        if( current.xPos < (cols-1) && current.yPos < (rows-1) )
-        {
-          if( checkVert )
-          {
-            if( blickGrid[current.xPos][current.yPos+1].isOccupied )
-            {
-              next = getAdjacentBlock( current, 0 );
-              if( current.type == next.type )
-              {
-                connections++;
-                current = next;
-                checkVert = !checkVert;
-              }
-              else
-              {
-                finished = true;
-              }
-            }
-            else
-            {
-              finished = true;
-            }
-          }
-          else
-          {
-            if( blickGrid[current.xPos+1][current.yPos].isOccupied )
-            {
-              //if there is a block to the right of current
-              next = getAdjacentBlock( current, 1 );
-              if( current.type == next.type )
-              {
-                //If current and next are same block type, move onto next set
-                connections++;
-                checkVert = !checkVert;
-                current = next;
-              }
-              else
-              {
-                //If block to the right of current is different type
-                finished = true;
-              }
-            }
-            else
-            {
-              //If there is no block to the right of current
-              finished = true;
-            }
-          }
-        }
-        else
-        {
-          //If at the top of the gameboard
-          finished = true;
-        }
-      }
-      if( connections == 3 )
-      {
-        found = true;
-        blockSearchResult = 1;
-        //Delete the blocks
-        current = block;
-        next = current;
-        checkVert = false;
-        for( int i = 0; i < 4; i++ )
-        {
-          if( i < 3 )
-          {
-            if( checkVert )
-            {
-              next = getAdjacentBlock( current, 0 );
-              checkVert = !checkVert;
-            }
-            else
-            {
-              next = getAdjacentBlock( current, 1 );
-              checkVert = !checkVert;
-            }
-          }
-          for( int j = 0; j < activeBlocks.size(); j++ )
-          {
-            Block temp = activeBlocks.get(j);
-            if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-            {
-              blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-              blickGrid[temp.xPos][temp.yPos].isSettled = false;
-              activeBlocks.remove(j);
-              bubbleSortBlocks(1);
-              break;
-            }
-          }
-          current = next;
-        }
-      }
-    }
-  }
-  return blockSearchResult;
-}
-
-int findZ_block( Block block )
-{
-  //Returns -1 if Z block was not found
-  //Returns 0 if Z block was found and Z block is vertical
-  //Returns 1 if Z block was found and Z block is horizontal
-  boolean found = false;
-  int blockSearchResult = -1;
-  if( blockTypeNearby( block ) )
-  {
-    int connections = 0;
-    Block current = new Block(), next = new Block();
-    current = block;
-   
-//---------VERTICAL 'Z' BlOCK --------- 
-
-    //search for and remove vertical Z block
-    boolean finished = false;
-    boolean checkVert = true;
-    while( !finished )
-    {
-      if( current.yPos < (rows-1) )
-      {
-        if( checkVert )
-        {
-          if( blickGrid[current.xPos][current.yPos+1].isOccupied )
-          {
-            next = getAdjacentBlock( current, 0 );
-            if( current.type == next.type )
-            {
-              connections++;
-              current = next;
-              checkVert = !checkVert;
-            }
-            else
-            {
-              finished = true;
-            }
-          }
-          else
-          {
-            finished = true;
-          }
-        }
-        else
-        {
-          if( current.xPos < (cols-1) )
-          {
-            if( blickGrid[current.xPos+1][current.yPos].isOccupied )
-            {
-              //if there is a block to the right of current
-              next = getAdjacentBlock( current, 1 );
-              if( current.type == next.type )
-              {
-                //If current and next are same block type, move onto next set
-                connections++;
-                checkVert = !checkVert;
-                current = next;
-              }
-              else
-              {
-                //If block to the right of current is different type
-                finished = true;
-              }
-            }
-            else
-            {
-              //If there is no block to the right of current
-              finished = true;
-            }
-          }
-          else
-          {
-            //If too close to right side of the board
-            finished = true;
-          }
-        }
-      }
-      else
-      {
-        //If at the top of the gameboard
-        finished = true;
-      }
-    }
-    if( connections == 3 )
-    {
-      found = true;
-      blockSearchResult = 0;
-      //Delete the blocks
-      current = block;
-      checkVert = true;
-      for( int i = 0; i < 4; i++ )
-      {
-        if( i < 3 )//Don't move next above current on last block, nothing will be there
-        {
-          if( checkVert )
-          {
-            next = getAdjacentBlock( current, 0 );
-            checkVert = !checkVert;
-          }
-          else
-          {
-            next = getAdjacentBlock( current, 1 );
-            checkVert = !checkVert;
-          }
-        }
-        for( int j = 0; j < activeBlocks.size(); j++ )
-        {
-          Block temp = activeBlocks.get(j);
-          if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-          {
-            blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-            blickGrid[temp.xPos][temp.yPos].isSettled = false;
-            activeBlocks.remove(j);
-            bubbleSortBlocks(1);
-            break;
-          }
-        }
-        current = next;
-      }
-    }
-    
-//---------HORIZONTAL 'Z' BLOCK---------
-    
-    if( !found )//If no vertical block was found
-    {
-      //Search and remove horizontal block
-      current = new Block();
-      next = new Block();
-      current = block;
-      connections = 0;
-      finished = false;
-      checkVert = false;
-      while( !finished )
-      {
-        if( current.xPos > 0 && current.yPos < (rows-1) )
-        {
-          if( checkVert )
-          {
-            if( blickGrid[current.xPos][current.yPos+1].isOccupied )
-            {
-              next = getAdjacentBlock( current, 0 );
-              if( current.type == next.type )
-              {
-                connections++;
-                current = next;
-                checkVert = !checkVert;
-              }
-              else
-              {
-                finished = true;
-              }
-            }
-            else
-            {
-              finished = true;
-            }
-          }
-          else
-          {
-            if( blickGrid[current.xPos-1][current.yPos].isOccupied )
-            {
-              //if there is a block to the left of current
-              next = getAdjacentBlock( current, 3 );
-              if( current.type == next.type )
-              {
-                //If current and next are same block type, move onto next set
-                connections++;
-                checkVert = !checkVert;
-                current = next;
-              }
-              else
-              {
-                //If block to the left of current is different type
-                finished = true;
-              }
-            }
-            else
-            {
-              //If there is no block to the left of current
-              finished = true;
-            }
-          }
-        }
-        else
-        {
-          //If at the top of the gameboard
-          finished = true;
-        }
-      }
-      if( connections == 3 )
-      {
-        found = true;
-        blockSearchResult = 1;
-        //Delete the blocks
-        current = block;
-        next = current;
-        checkVert = false;
-        for( int i = 0; i < 4; i++ )
-        {
-          if( i < 3 )
-          {
-            if( checkVert )
-            {
-              next = getAdjacentBlock( current, 0 );
-              checkVert = !checkVert;
-            }
-            else
-            {
-              next = getAdjacentBlock( current, 3 );
-              checkVert = !checkVert;
-            }
-          }
-          for( int j = 0; j < activeBlocks.size(); j++ )
-          {
-            Block temp = activeBlocks.get(j);
-            if( temp.xPos == current.xPos && temp.yPos == current.yPos )
-            {
-              blickGrid[temp.xPos][temp.yPos].isOccupied = false;
-              blickGrid[temp.xPos][temp.yPos].isSettled = false;
-              activeBlocks.remove(j);
-              bubbleSortBlocks(1);
-              break;
-            }
-          }
-          current = next;
-        }
-      }
-    }
-  }
-  return blockSearchResult;
-}
-
-int findL_block( Block block )
-{
-  //Returns -1 if L block was not found
-  //Returns these integer values to show which rotation of shape was found
-  //   0        1        2        3
-  //--XX---- -------- --XXXX-- --------
-  //--XX---- XXXXXXXX --XXXX-- ------XX
-  //--XX---- XXXXXXXX ----XX-- ------XX
-  //--XX---- XX------ ----XX-- XXXXXXXX
-  //--XXXX-- XX------ ----XX-- XXXXXXXX
-  //--XXXX-- -------- ----XX-- --------
-  int blockSearchResult = -1;
-  if( blockTypeNearby( block ) )
-  {
-    int connections = 0;
-    Block current = new Block(), next = new Block();
-    current = block;
-    int[][] searchDirs = new int[][]{ 
-                                   { 3, 0, 0 },
-                                   { 0, 1, 1 },
-                                   { 1, 2, 2 },
-                                   { 2, 3, 3 } };
-    int rotationSearch = 0; //Which rotation of shape currently being searched for, change to -1 if one was found to stop search
-    int xDir = 0;
-    int yDir = 0;
-    for( int i = 0; i < 4; i++ )
-    {
-      current = block;
-      connections = 0;
-      for( int j = 0; j < 3; j++ )
-      {
-        boolean doSearch = false;
-        switch( searchDirs[i][j] )
-        {
-          case 0:
-            if( current.yPos < (rows-1) )
-            {
-              doSearch = true;
-            }
-            yDir = 1;
-            xDir = 0;
-            break;
-        
-          case 1:
-            if( current.xPos < (cols-1) )
-            {
-               doSearch = true; 
-            }
-            yDir = 0;
-            xDir = 1;
-            break;
-            
-          case 2:
-            if( current.yPos > 0 )
-            {
-              doSearch = true;
-            }
-            yDir = -1;
-            xDir = 0;
-            break;
-            
-          case 3:
-            if( current.xPos > 0 )
-            {
-              doSearch = true;
-            }
-            yDir = 0;
-            xDir = -1;
-            break;
-        }
-        if( doSearch )
-        {
-          if( nearbyBlockExists( current, searchDirs[i][j] ) )
-          {
-            next = getAdjacentBlock( current, searchDirs[i][j] );
-            if( sameBlockType( current, next ) )
-            {
-              connections++;
-              current = next;
-              if( connections == 3 )
-              {
-                blockSearchResult = i;//Found block, show type found
-                break;
-              }
-            }
-            else
-            {
-              break;
-            }
-          }
-          else
-          {
-            break;
-          }
-        }
-      }
-      if( connections == 3 )
-      {
-        break;
-      }
-    }
-    
-    //Add code for removal here
-  }
-  return blockSearchResult;
-}
-
 void removeFinishedShapes()
 {
   if( !blockInPlay )
@@ -863,7 +142,7 @@ void removeFinishedShapes()
             break;
           }
           temp = activeBlocks.get(i);
-          int search = findI_block( temp );//Search for an I block (horizontal+vertical)
+          int search = findBlock_I( temp );//Search for an I block (horizontal+vertical)
           if( search != -1 )
           {
             //If an I block was found
@@ -883,7 +162,7 @@ void removeFinishedShapes()
           }
           if( continueSearch )
           {
-            search = findS_block( temp );
+            search = findBlock_S( temp );
             if( search != -1 )
             {
               //If an S block was found
@@ -904,7 +183,7 @@ void removeFinishedShapes()
           }
           if( continueSearch )
           {
-            search = findZ_block( temp );
+            search = findBlock_Z( temp );
             if( search != -1 )
             {
               //If a Z block was found
@@ -925,12 +204,10 @@ void removeFinishedShapes()
           }
           if( continueSearch )
           {
-            search = findL_block( temp );
+            search = findBlock_L( temp );
             if( search != -1 )
             {
-              DEBUG_foundL = true;
               continueSearch = false;
-              /*
               score += points.l;
               if( search == 0 )
               {
@@ -944,17 +221,95 @@ void removeFinishedShapes()
               {
                 pointMessages.add( new PointMessage( 'l', (temp.xPos+1), (temp.yPos-2) ) );
               }
-              else if ( search == 3 ) 
+              else if( search == 3 ) 
               {
                 pointMessages.add( new PointMessage( 'l', (temp.xPos-2), (temp.yPos-1) ) );
               }
               finishedRemovingBlocks = false;
-              */
+            }
+          }
+          if( continueSearch )
+          {
+            search = findBlock_J( temp );
+            if( search != -1 )
+            {
+              continueSearch = false;
+              score += points.j;
+              if( search == 0 )
+              {
+                pointMessages.add( new PointMessage( 'j', (temp.xPos+1), (temp.yPos+1) ) );
+              }
+              else if( search == 1 )
+              {
+                pointMessages.add( new PointMessage( 'j', (temp.xPos+1), (temp.yPos-1) ) );
+              }
+              else if( search == 2 )
+              {
+                pointMessages.add( new PointMessage( 'j', (temp.xPos-1), (temp.yPos-1) ) );
+              }
+              else if( search == 3 ) 
+              {
+                pointMessages.add( new PointMessage( 'j', (temp.xPos-2), (temp.yPos+1) ) );
+              }
+              finishedRemovingBlocks = false;
+            }
+          }
+          if( continueSearch )
+          {
+            search = findBlock_O( temp );
+            if( search != -1 )
+            {
+              continueSearch = false;
+              score += points.o;
+              if( search == 0 )
+              {
+                pointMessages.add( new PointMessage( 'o', (temp.xPos+1), (temp.yPos+1) ) );
+              }
+              else if( search == 1 )
+              {
+                pointMessages.add( new PointMessage( 'o', (temp.xPos+1), (temp.yPos-1) ) );
+              }
+              else if( search == 2 )
+              {
+                pointMessages.add( new PointMessage( 'o', (temp.xPos-1), (temp.yPos-1) ) );
+              }
+              else if( search == 3 ) 
+              {
+                pointMessages.add( new PointMessage( 'o', (temp.xPos-2), (temp.yPos+1) ) );
+              }
+              finishedRemovingBlocks = false;
+            }
+          }
+          if( continueSearch )
+          {
+            search = findBlock_T( temp );
+            if( search != -1 )
+            {
+              continueSearch = false;
+              score += points.t;
+              if( search == 0 )
+              {
+                pointMessages.add( new PointMessage( 't', (temp.xPos+1), (temp.yPos+1) ) );
+              }
+              else if( search == 1 )
+              {
+                pointMessages.add( new PointMessage( 't', (temp.xPos+1), (temp.yPos-1) ) );
+              }
+              else if( search == 2 )
+              {
+                pointMessages.add( new PointMessage( 't', (temp.xPos-1), (temp.yPos-1) ) );
+              }
+              else if( search == 3 ) 
+              {
+                pointMessages.add( new PointMessage( 't', (temp.xPos-2), (temp.yPos+1) ) );
+              }
+              finishedRemovingBlocks = false;
             }
           }
           if( !continueSearch )
           {
             settleBlocks();
+            bubbleSortBlocks(1);
           }
         }
       }
@@ -962,6 +317,7 @@ void removeFinishedShapes()
     if( !allBlocksSettled() )
     {
       settleBlocks();
+      bubbleSortBlocks(1);
     }
   }
 }
