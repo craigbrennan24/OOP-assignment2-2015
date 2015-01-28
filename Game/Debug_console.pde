@@ -11,6 +11,7 @@ void drawDebugConsole()
   s4 = "blockDropSpeed = " + str(blockDropSpeed);
   s7 = "Score: " + str(int(score));
   
+  fill(0);
   text( s1, 20, 100 );
   text( s2, 20, 125 );
   text( s3, 20, 150 );

@@ -11,10 +11,10 @@ class Block
   4 - red
   5 - pink
   6 - blue
-  7 - grey
   */
   boolean inPlay;
   color c;
+  boolean dummyBlock;
   
   Block()
   {
@@ -22,6 +22,7 @@ class Block
     yPos = 0;
     type = -1;
     inPlay = false;
+    dummyBlock = false;
   }
   
   Block( int x, int y )
@@ -32,16 +33,25 @@ class Block
     inPlay = false;
     type = int(random(7));
     c = setColour(type);
+    dummyBlock = false;
   }
   
   Block( int x, int y, int type )
   {
+    this( x, y );
+    c = setColour( type );
+    this.type = type;
+  }
+  
+  Block( int x, int y, int type, boolean b )
+  {
+    //Use this constuctor for creating dummy blocks in instructions screen
     xPos = x;
     yPos = y;
-    blickGrid[xPos][yPos].isOccupied = true;
     inPlay = false;
     this.type = type;
     c = setColour(type);
+    dummyBlock = b;
   }
   
   void draw()
@@ -49,7 +59,14 @@ class Block
     rectMode(CENTER);
     fill(c);
     stroke(190);
-    rect(xPositions[xPos], yPositions[yPos], blockSize, blockSize);
+    if( !dummyBlock )//If a block in game
+    {
+      rect(xPositions[xPos], yPositions[yPos], blockSize, blockSize);
+    }
+    else//If a dummy block on instructions screen
+    {
+      rect(xPos, yPos, blockSize, blockSize);
+    }
     if( DEBUG_showConnectedBlocks )
     {
       findShapesTest();

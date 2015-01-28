@@ -215,7 +215,7 @@ void removeFinishedShapes()
               }
               else if( search == 1 )
               {
-                pointMessages.add( new PointMessage( 'l', (temp.xPos+2), (temp.yPos+1) ) );
+                pointMessages.add( new PointMessage( 'l', (temp.xPos+1), (temp.yPos+1) ) );
               }
               else if( search == 2 )
               {
@@ -223,7 +223,7 @@ void removeFinishedShapes()
               }
               else if( search == 3 ) 
               {
-                pointMessages.add( new PointMessage( 'l', (temp.xPos-2), (temp.yPos-1) ) );
+                pointMessages.add( new PointMessage( 'l', (temp.xPos-1), (temp.yPos-1) ) );
               }
               finishedRemovingBlocks = false;
             }

@@ -1,45 +1,94 @@
 void keyPressed()
 {
-  if( !gameOver )
+  keys[keyCode] = true;
+  if( !arcadeControls )
   {
-    if( key == 'p' || key == 'P' )
+    //If playing on PC
+    if( !gameOver )
     {
-      paused = !paused;
-    }
-    if( blockInPlay )
-    {
-      if( key == CODED )
+      if( inGame ) 
       {
-        if( keyCode == LEFT )
+        /* PC CONTROLS */
+        if( key == 'p' || key == 'P' )
         {
-          controlBlock( 0 );
+          paused = !paused;
         }
-        else if( keyCode == RIGHT )
+        if( paused )
         {
-          controlBlock( 1 );
+          if( key == ' ' )
+          {
+            inGame = false;
+            titleScreen = true;
+            paused = false;
+          }
         }
-        else if( keyCode == DOWN )
+        if( blockInPlay )
         {
-          controlBlock( 2 );
+          if( key == CODED )
+          {
+            if( keyCode == LEFT )
+            {
+              controlBlock( 0 );
+            }
+            else if( keyCode == RIGHT )
+            {
+              controlBlock( 1 );
+            }
+            else if( keyCode == DOWN )
+            {
+              controlBlock( 2 );
+            }
+          }
+          else
+          {
+            if( key == 'a' || key == 'A' )
+            {
+              controlBlock( 0 );
+            }
+            else if( key == 'd' || key == 'D' )
+            {
+              controlBlock( 1 );
+            }
+            else if( key == 's' || key == 'S' )
+            {
+              controlBlock( 2 );
+            }
+            else if( key == ' ' )
+            {
+              dropNextDelay = 0;
+            }
+          }
+        }
+        else
+        {
+          if( key == ENTER )
+          {
+            dropBlock();
+          }
         }
       }
-      else
+      else if( titleScreen )
       {
-        if( key == 'a' || key == 'A' )
+        if( key == ' ' )
         {
-          controlBlock( 0 );
+          titleScreen = false;
+          score = 0;
+          clearBoard();
+          randomizeStart();
+          inGame = true;
         }
-        else if( key == 'd' || key == 'D' )
+        else if( key == 'h' || key == 'H' )
         {
-          controlBlock( 1 );
+          titleScreen = false;
+          helpScreen = true;
         }
-        else if( key == 's' || key == 'S' )
+      }
+      else if( helpScreen )
+      {
+        if( key == ' ' )
         {
-          controlBlock( 2 );
-        }
-        else if( key == ' ' )
-        {
-          dropNextDelay = 0;
+          helpScreen = false;
+          titleScreen = true;
         }
       }
     }
@@ -47,32 +96,117 @@ void keyPressed()
     {
       if( key == ENTER )
       {
-        dropBlock();
+        gameOver = false;
+        score = 0;
+        setup();
+        inGame = false;
+        titleScreen = true;
       }
     }
   }
   else
   {
-    if( key == ENTER )
+    //If playing on arcade machine
+    if( !gameOver )
     {
-      gameOver = false;
-      setup();
+      if( inGame ) 
+      {
+        /* ARCADE CONTROLS */
+        if( checkKey(button2) )
+        {
+          paused = !paused;
+        }
+        if( paused )
+        {
+          if( checkKey(start) )
+          {
+            inGame = false;
+            titleScreen = true;
+            paused = false;
+          }
+        }
+        if( blockInPlay )
+        {
+          if( checkKey(left) )
+          {
+            controlBlock( 0 );
+          }
+          else if( checkKey(right) )
+          {
+            controlBlock( 1 );
+          }
+          else if( checkKey(down) )
+          {
+            controlBlock( 2 );
+          }
+        }
+      }
+      else if( titleScreen )
+      {
+        if( checkKey( start ) )
+        {
+          titleScreen = false;
+          score = 0;
+          clearBoard();
+          randomizeStart();
+          inGame = true;
+        }
+        else if( checkKey( button1 ) )
+        {
+          titleScreen = false;
+          helpScreen = true;
+        }
+      }
+      else if( helpScreen )
+      {
+        if( checkKey( button2 ) )
+        {
+          helpScreen = false;
+          titleScreen = true;
+        }
+      }
+    }
+    else
+    {
+      if( checkKey(start) )
+      {
+        gameOver = false;
+        score = 0;
+        setup();
+      }
     }
   }
   
 }
 
-void mousePressed()
+void keyReleased()
 {
-  if( mouseButton == LEFT )
+  keys[keyCode] = false;
+}
+
+boolean checkKey(char theKey)
+{
+  return keys[Character.toUpperCase(theKey)];
+}
+
+char buttonNameToKey(XML xml, String buttonName)
+{
+  String value = xml.getChild(buttonName).getContent();
+  if ("LEFT".equalsIgnoreCase(value))
   {
-    clearBoard();
+    return LEFT;
   }
-  else if( mouseButton == RIGHT )
+  if ("RIGHT".equalsIgnoreCase(value))
   {
-    if( activeBlocks.isEmpty() )
-    {
-      randomizeStart();
-    }
+    return RIGHT;
   }
+  if ("UP".equalsIgnoreCase(value))
+  {
+    return UP;
+  }
+  if ("DOWN".equalsIgnoreCase(value))
+  {
+    return DOWN;
+  }
+  return value.charAt(0);
 }

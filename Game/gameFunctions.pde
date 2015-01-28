@@ -211,25 +211,19 @@ void drawPauseMessage()
   fill(0);
   String s = "PAUSED !";
   textSize(50);
-  text( s, (width/2)-100, 200 );
+  text( s, (width/2), 200 );
+  String s1 = "";
+  if( !arcadeControls )
+  {
+    s1 = "P to continue\nSpace to quit";
+  }
+  else
+  {
+    s1 = "Button2 to continue\nStart to quit";
+  }
+  textSize( 20 );
+  text( s1, 150, 50 );
 }
-
-/* i might use these i dont know
-void keyPressed()
-{
-  keys[keyCode] = true;
-}
-
-void keyReleased()
-{
-  keys[keyCode] = false;  
-}
-
-boolean checkKey( char theKey )
-{
-   return keys[Character.toUpperCase(theKey)]; 
-}
-*/
 
 void controlBlock( int type )
 {
@@ -336,6 +330,17 @@ void drawGameOverScreen()
   textAlign(CENTER);
   fill(0);
   text( "GAME OVER", width/2, height/2 );
+  textSize( 45 );
+  text( "Score = " + str(int(score)), width/2, (height/3)*2 );
+  textSize( 25 );
+  if( !arcadeControls )
+  {
+    text( "Press Enter", width/2, ((height/7)*6) );
+  }
+  else
+  {
+    text( "Press Start", width/2, ((height/7)*6) );
+  }
 }
 
 boolean allBlocksSettled()
