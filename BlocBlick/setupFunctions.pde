@@ -55,3 +55,17 @@ color setColour(int z)
   }
   return c;
 }
+
+void setupKeyBindings()
+{
+  //Load keybinds from XML file for arcade machine
+  XML xml = loadXML("arcade.xml");
+  XML[] children = xml.getChildren("player");
+  up = buttonNameToKey( xml, "up" );
+  down = buttonNameToKey( xml, "down" );
+  left = buttonNameToKey( xml, "left" );
+  right = buttonNameToKey( xml, "right" );
+  start = buttonNameToKey( xml, "start" );
+  button1 = buttonNameToKey ( xml, "button1");
+  button2 = buttonNameToKey( xml, "button2" );
+}
