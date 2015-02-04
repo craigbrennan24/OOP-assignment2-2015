@@ -1,6 +1,6 @@
 //***************************************
 //Bryan - Change this flag to true to let game run on arcade machine
-boolean arcadeControls = true;
+boolean arcadeControls = false;
 //***************************************
 
 //Predefined Values
@@ -100,7 +100,7 @@ void draw()
         {
           drawOccupiedIndicators();
         }
-        //drawClock(); /*Had problem with clock, prioritizing on completing game first*/
+        drawClock(); /*Had problem with clock, prioritizing on completing game first*/
         if( DEBUG_showDebugConsole )
         {
           drawDebugConsole();
@@ -112,6 +112,7 @@ void draw()
       }
       else
       {
+        gameTimeBuffer = millis() - gameTime;
         drawPauseMessage();
       }
     }

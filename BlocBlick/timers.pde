@@ -23,6 +23,8 @@ void updateTimers()
       blockDropSpeed = normalDropSpeed;
     }
   }
+    
+  gameTime = ( millis() - gameTimeBuffer ); //update game clock
 }
 
 void timeDropNext()
