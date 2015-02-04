@@ -1,6 +1,6 @@
 //***************************************
 //Bryan - Change this flag to true to let game run on arcade machine
-boolean arcadeControls = false;
+boolean arcadeControls = true;
 //***************************************
 
 //Predefined Values
