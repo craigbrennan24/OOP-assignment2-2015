@@ -27,6 +27,8 @@ float gameTimeBuffer = 0;
 Points points = new Points();
 float score = 0;
 float test = 0;
+int blocksSinceLastPush = 0;
+int blockPushDelay = 8;
 
 //Misc flags
 boolean blockInPlay = false;
@@ -36,6 +38,8 @@ boolean inGame = false;
 boolean titleScreen = true;
 boolean helpScreen = false;
 boolean finishedRemovingBlocks = true;
+boolean canPushBlocks = false;
+boolean canPushBlocks_flag = true;
 
 //DEBUG FLAGS
 boolean DEBUG_showDebugConsole = false;
@@ -109,6 +113,11 @@ void draw()
         textSize( 20 );
         text( "Score - " + str(int(score)), (width/5), height/2 );
         updateTimers();
+        if( canPushBlocks && !blockInPlay )
+        {
+          addBlockLevel();
+          canPushBlocks = false;
+        }
       }
       else
       {

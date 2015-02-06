@@ -1,5 +1,6 @@
 void updateTimers()
 {
+  //Flag controllers for dropping blocks
   if( activeBlockDrop_flag == false )
   {
     if( (millis() - activeBlockDrop) >= blockDropSpeed*1000 )
@@ -21,6 +22,22 @@ void updateTimers()
     {
       blockDown_flag = !blockDown_flag;
       blockDropSpeed = normalDropSpeed;
+    }
+  }
+  //Flag controller for addBlockLevel
+  if( blockInPlay )
+  {
+    if( canPushBlocks_flag )
+    {
+      canPushBlocks = true;
+      canPushBlocks_flag = false;
+    }
+  }
+  else
+  {
+    if( !canPushBlocks_flag )
+    {
+      canPushBlocks_flag = true;
     }
   }
     

@@ -133,6 +133,7 @@ void dropBlock()
   }
   activeBlockDrop_flag = false;
   activeBlockDrop = millis();
+  blocksSinceLastPush++;
 }
 
 void blockFall( int x, int y )
@@ -521,4 +522,50 @@ ArrayList<Block> setupHelpScreenShapes()
   
   
   return shapes;
+}
+
+void addBlockLevel()
+{
+  //check top row for blocks
+  if( blocksSinceLastPush > blockPushDelay )
+  {
+    blocksSinceLastPush = 0;
+    boolean doPush = true;
+    for( int i = 0; i < activeBlocks.size(); i++ )
+    {
+      Block temp = activeBlocks.get(i);
+      if( temp.yPos == (rows-1) )
+      {
+        doPush = false;
+        break;
+      }
+    }
+    if( doPush )
+    {
+      //If there are no blocks in the top row
+      //Move all blocks up one position
+      bubbleSortBlocks(1);
+      for( int i = activeBlocks.size()-1; i >= 0; i-- )
+      {
+        Block temp = activeBlocks.get(i);
+        blickGrid[temp.xPos][temp.yPos].isSettled = false;
+        blickGrid[temp.xPos][temp.yPos].isOccupied = false;
+        temp.yPos++;
+        blickGrid[temp.xPos][temp.yPos].isSettled = true;
+        blickGrid[temp.xPos][temp.yPos].isOccupied = true;
+      }
+      //Add new blocks in empty row beneath
+      for( int i = 0; i < cols; i++ )
+      {
+        Block newBlock = new Block( i, 0 );
+        blickGrid[newBlock.xPos][newBlock.yPos].isSettled = true;
+        activeBlocks.add( newBlock );
+      }
+      bubbleSortBlocks(1);
+    }
+    else
+    {
+      //If there are blocks in the top row, end the game.
+    }
+  }
 }
